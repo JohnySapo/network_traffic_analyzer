@@ -1,5 +1,6 @@
 package com.Backend.Entity;
 
+import com.Backend.Entity.Authentication.Token;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "user_network")
-public class UserEntity {
+public class UserEntity implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,40 +32,42 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> token;
+
     public UserEntity() {}
 
     public UserEntity(
-            Integer id,
             String username,
             String firstname,
             String lastname,
             String email,
             String password,
-            Role role
+            Role role,
+            List<Token> token
     ) {
-        this.id = id;
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.token = token;
     }
 
-    public UserEntity(
-            String username,
-            String firstname,
-            String lastname,
-            String email,
-            String password,
-            Role role
-    ) {
-        this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 
     public Integer getId() {
@@ -75,9 +78,6 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -105,10 +105,6 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {

@@ -1,7 +1,8 @@
 package com.Backend.Config;
 
 import com.Backend.Entity.Role;
-import com.Backend.Repository.UserRepository;
+import com.Backend.Repository.User.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.password.CompromisedPasswordC
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,12 +21,14 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Configuration
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
+    @Autowired
     public ApplicationConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -32,10 +36,10 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(
+                .map(user -> new User(
                         user.getUsername(),
                         user.getPassword(),
-                        mapRolesToAuthorities(user.getRole()) // Mapping the user's role to authorities
+                        mapRolesToAuthorities(user.getRole())
                 ))
                 .orElseThrow(() -> new UsernameNotFoundException("UserEntity not found!"));
     }
@@ -43,7 +47,6 @@ public class ApplicationConfig {
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Role role) {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
 
     /*
      ** Ensure user's password encryption
