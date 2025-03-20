@@ -59,14 +59,14 @@ docker compose down
 
 After the command **docker compose up**, wait the container to mount and verify if it finished with the same screenshot below.
 
-![docker-start-up](documents\screenshots\docker-start-up.jpg)
+![docker-start-up](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/docker-start-up.jpg?raw=true)
 
 Once the container is mounted, open a browser of your preference [ **Recommended**: Google Chrome ] and open the url below to access the application.
 
 ````bash
 http://localhost:5123
 ````
-![app-main-page](documents\screenshots\app-main-page.jpg)
+![app-main-page](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/app-main-page.jpg?raw=true)
 
 ## Backend - API Design
 
