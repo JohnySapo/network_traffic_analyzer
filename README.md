@@ -57,6 +57,17 @@ Stop the application with the Docker Command
 docker compose down
 ```
 
+After the command **docker compose up**, wait the container to mount and verify if it finished with the same screenshot below.
+
+![docker-start-up](documents\screenshots\docker-start-up.jpg)
+
+Once the container is mounted, open a browser of your preference [ **Recommended**: Google Chrome ] and open the url below to access the application.
+
+````bash
+http://localhost:5123
+````
+![app-main-page](documents\screenshots\app-main-page.jpg)
+
 ## Backend - API Design
 
 | Name | URL | Permission | HTTP Method |
