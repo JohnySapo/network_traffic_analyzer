@@ -1,17 +1,17 @@
 import AppSidebar from "@/components/sidebar/appsidebar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuth } from "@/context/UseAuth";
-import { hello } from "@/service/AuthService";
+import { userInfo } from "@/service/AuthService";
 import { useEffect, useState } from "react";
 
 export const User = () => {
-    const { user, token } = useAuth();
+    const { token } = useAuth();
     const [message, setMessage] = useState<string>("");
 
     useEffect(() => {
         const fetchHello = async () => {
           try {
-            const response = await hello(token);
+            const response = await userInfo(token);
     
             const data = await response.data;
             setMessage(data);

@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, REGISTER, REFRESH_TOKEN } from "@/config/API-Config";
+import { LOGIN, LOGOUT, REGISTER, REFRESH_TOKEN, USER_INFO } from "@/config/API-Config";
 import { UserProfileToken } from "@/model/User";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
@@ -90,10 +90,10 @@ export const refreshTokenAPI = async (token: string) => {
     }
 };
 
-export const hello = async(token: string) => {
+export const userInfo = async(token: string) => {
     try {
         const csrf = Cookies.get("XSRF-TOKEN");
-        const response = await axios.get("/network/user/hello", {
+        const response = await axios.get(USER_INFO, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,

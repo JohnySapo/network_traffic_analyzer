@@ -22,12 +22,12 @@ export default defineConfig({
       usePolling: true,
     },
     cors: {
-      origin: "http://localhost:5123",
+      origin: "http://localhost:5123/",
       credentials:true,
     },
     proxy: {
       "/network" :{
-        target: "http://network-traffic-backend:8080",
+        target: "http://network-traffic-backend:8080/",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/network/, ''),

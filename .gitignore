@@ -1,1 +1,4 @@
-/.idea
+.idea
+
+network_traffic_backend/src/main/resources/config/application-dev.yaml
+network_traffic_backend/src/main/resources/config/postgresql.properties

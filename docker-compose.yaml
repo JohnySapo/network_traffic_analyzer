@@ -1,23 +1,27 @@
 services:
   postgresdb:
-    image: postgres
     container_name: postgresdb
+    image: postgres
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${POSTGRESQL_ROOT_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
       - POSTGRES_DB=${POSTGRESQL_ROOT_DATABASE}
     ports:
-      - 5433:5432
+      - ${POSTGRESQL_LOCAL_PORT}:${POSTGRESQL_DOCKER_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - network_traffic_analyzer-app
 
-  network_traffic_backend:
+  network-traffic-backend:
+    container_name: network-traffic-backend
+    image: network-traffic-backend-i
     depends_on:
       - postgresdb
     build: 
       context: ./network_traffic_backend
-    container_name: network_traffic_backend
+      dockerfile: Dockerfile
     restart: on-failure
     volumes:
       - spring_data:/network_traffic_backend
@@ -29,7 +33,31 @@ services:
       - SPRING_DATASOURCE_USERNAME=${POSTGRESQL_ROOT_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRESQL_ROOT_PASSWORD}
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SERVER_PORT=${SPRING_DOCKER_PORT}
+    networks:
+      - network_traffic_analyzer-app
+
+  network-traffic-frontend:
+    container_name: network-traffic-frontend
+    image: network-traffic-frontend-i
+    build: 
+      context: ./network_traffic_frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - network-traffic-backend
+    volumes:
+      - react_data:/app
+      - /app/node_modules
+    ports: 
+      - ${VITE_LOCAL_PORT}:${VITE_DOCKER_PORT}
+    networks:
+      - network_traffic_analyzer-app
+
+networks:
+    network_traffic_analyzer-app:
+      driver: bridge
 
 volumes:
   postgres_data:
   spring_data:
+  react_data:

@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ## development
-network_traffic_backend/src/main/resources/config/postgresql.properties
 network_traffic_backend/src/main/resources/config/application-dev.yaml
+network_traffic_backend/src/main/resources/config/postgresql.properties

@@ -8,8 +8,8 @@ spring:
       - optional:classpath:config/logger.properties
       - optional:classpath:config/jpaconfig.properties
       - optional:classpath:config/jwttoken.properties
-  jpa:
     show-sql: ${JPA_SHOW_SQL}
+  jpa:
     hibernate:
         ddl-auto: ${HIBERNATE_DDL_AUTO}
     properties:
