@@ -1,19 +1,44 @@
-import { LOGIN, LOGOUT, REGISTER, REFRESH_TOKEN, USER_INFO } from "@/config/API-Config";
-import { UserProfileToken } from "@/model/User";
+import {
+    LOGIN,
+    LOGOUT,
+    REGISTER,
+    REFRESH_TOKEN,
+    USER_ACCOUNT,
+    USER_UPDATE_ACCOUNT,
+    USER_UPDATE_PASSWORD,
+} from "@/config/API-Config";
+import { handleErrorResponse } from "@/handler/error-handler";
+import {
+    UserLogin,
+    UserAccount,
+    UserRegister,
+    UserPassword,
+    UserAuthenticationToken,
+} from "@/model/User";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
+export const fetchCsrfToken = async () => {
+    try {
+        await axios.get(
+            "http://localhost:8080/csrf", 
+            { 
+                withCredentials: true
+            });
+        return Cookies.get("XSRF-TOKEN");
+    } catch (error) {
+        console.error("Failed to fetch CSRF token", error);
+    }
+};
+
 export const registerAPI = async (
-    username: string,
-    email: string,
-    password: string,
-    confirmPassword: string,
-): Promise<{ data: AxiosResponse<UserProfileToken> } | undefined> => {
+    register: UserRegister
+): Promise<{ data: AxiosResponse<UserAuthenticationToken> } | undefined> => {
     try {
         const csrf = Cookies.get("XSRF-TOKEN");
-        const data: AxiosResponse<UserProfileToken> = await axios.post<UserProfileToken>(
+        const data: AxiosResponse<UserAuthenticationToken> = await axios.post<UserAuthenticationToken>(
             REGISTER,
-            { username, email, password, confirmPassword },
+            register,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -24,20 +49,20 @@ export const registerAPI = async (
         );
 
         return { data };
-    } catch (error) {
-
+    } catch (error: any) {
+        handleErrorResponse(error);
     }
 }
 
 export const loginAPI = async (
-    username: string,
-    password: string
-): Promise<{ data?: AxiosResponse<UserProfileToken> } | undefined> => {
+    login: UserLogin
+): Promise<{ data?: AxiosResponse<UserAuthenticationToken> } | undefined> => {
     try {
+        await fetchCsrfToken();
         const csrf = Cookies.get("XSRF-TOKEN");
-        const data: AxiosResponse<UserProfileToken> = await axios.post<UserProfileToken>(
+        const data: AxiosResponse<UserAuthenticationToken> = await axios.post<UserAuthenticationToken>(
             LOGIN,
-            { username: username, password: password },
+            login,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -48,8 +73,8 @@ export const loginAPI = async (
         );
 
         return { data };
-    } catch (error) {
-
+    }catch (error: any) {
+        handleErrorResponse(error);
     }
 };
 
@@ -61,16 +86,90 @@ export const logoutAPI = async (token: string) => {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
+                    // "Authorization": `Bearer ${token}`,
                 },
                 withCredentials: true,
             }
         );
-    } catch (error) {
-        console.error("Logout API failed:", error);
-        throw error;
+    } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response) {
+            if (error.response.status === 400 || error.response.status === 404) {
+                throw new Error(error.response.data.message);
+            }
+        }
+        throw new Error("Something went wrong. Please try again later.");
     }
 };
+
+export const UserAccountAPI = async (
+    token: string
+): Promise<{ user: AxiosResponse<UserAccount> } | undefined> => {
+    try {
+        const csrf = Cookies.get("XSRF-TOKEN");
+        const user: AxiosResponse<UserAccount> = await axios.get<UserAccount>(
+            USER_ACCOUNT, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "X-XSRF-TOKEN": csrf
+            },
+            withCredentials: true,
+        });
+
+        return { user };
+    } catch (error: any) {
+        handleErrorResponse(error);
+    }
+}
+
+export const UpdateUserAccountAPI = async (
+    token: string,
+    account: UserAccount,
+): Promise<AxiosResponse<UserAuthenticationToken> | undefined> => {
+    try {
+        const csrf = Cookies.get("XSRF-TOKEN");
+        const response = await axios.put<UserAuthenticationToken>(
+            USER_UPDATE_ACCOUNT,
+            account,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "X-XSRF-TOKEN": csrf,
+                },
+                withCredentials: true,
+            });
+
+        return response;
+    } catch (error: any) {
+        handleErrorResponse(error);
+    }
+};
+
+export const UpdatePasswordAPI = async (
+    token: string,
+    password: UserPassword,
+): Promise<AxiosResponse<UserAuthenticationToken> | undefined> => {
+    try {
+
+        const csrf = Cookies.get("XSRF-TOKEN");
+        const response = await axios.put<UserAuthenticationToken>(
+            USER_UPDATE_PASSWORD,
+            password,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                    "X-XSRF-TOKEN": csrf,
+                },
+                withCredentials: true,
+            });
+
+        return response;
+    } catch (error: any) {
+        handleErrorResponse(error);
+    }
+}
 
 export const refreshTokenAPI = async (token: string) => {
     try {
@@ -89,21 +188,3 @@ export const refreshTokenAPI = async (token: string) => {
         return false;
     }
 };
-
-export const userInfo = async(token: string) => {
-    try {
-        const csrf = Cookies.get("XSRF-TOKEN");
-        const response = await axios.get(USER_INFO, {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-                "X-XSRF-TOKEN": csrf
-            },
-            withCredentials: true,
-        });
-
-        return response;
-    } catch (error) {
-        console.log(error);
-    }
-}

@@ -4,8 +4,8 @@ import com.Backend.Model.Authentication.AuthenticationResponse;
 import com.Backend.Model.Authentication.LoginRequest;
 import com.Backend.Model.Authentication.RegisterRequest;
 import com.Backend.Service.Authentication.AuthenticationService;
-import com.Backend.Service.Authentication.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,21 +14,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationService authService;
-    private final JwtService jwtService;
 
     @Autowired
-    public AuthenticationController(AuthenticationService authService, JwtService jwtService) {
+    public AuthenticationController(AuthenticationService authService) {
         this.authService = authService;
-        this.jwtService = jwtService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
         return authService.register(request);
     }
 

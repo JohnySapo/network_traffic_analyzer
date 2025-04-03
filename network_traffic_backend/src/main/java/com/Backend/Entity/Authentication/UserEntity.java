@@ -1,6 +1,5 @@
-package com.Backend.Entity;
+package com.Backend.Entity.Authentication;
 
-import com.Backend.Entity.Authentication.Token;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

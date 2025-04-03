@@ -1,19 +1,18 @@
 package com.Backend.Service.Authentication;
 
-import com.Backend.Entity.UserEntity;
+import com.Backend.Entity.Authentication.Token;
+import com.Backend.Entity.Authentication.UserEntity;
 import com.Backend.Repository.Authentication.TokenRepository;
-import com.Backend.Repository.User.UserRepository;
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,6 +20,7 @@ import java.util.*;
 @Service
 public class JwtService {
 
+    private String REFRESH_TOKEN = "X-REFRESH-TOKEN";
     @Value("${security.jwt.token.secret-key}")
     private String SECRET_KEY;
     @Value("${security.jwt.token.access-token-expiration}")
@@ -29,12 +29,10 @@ public class JwtService {
     private long REFRESH_TOKEN_EXPIRE;
 
 
-    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
 
     @Autowired
-    public JwtService(UserRepository userRepository, TokenRepository tokenRepository) {
-        this.userRepository = userRepository;
+    public JwtService(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
@@ -52,16 +50,14 @@ public class JwtService {
     }
 
     public String createToken(UserDetails user, long expireTime) {
-
         // Current time
         Date now = new Date(System.currentTimeMillis());
-
         //Access Token Expiration ## 01 Hour
         //Refresh Token Expiration ## 01 Day
         Date validity = new Date(now.getTime() + expireTime);
+        Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         String role = user.getAuthorities().iterator().next().getAuthority();
 
-        Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withIssuedAt(now)
@@ -110,5 +106,52 @@ public class JwtService {
                 .require(Algorithm.HMAC256(SECRET_KEY))
                 .build()
                 .verify(token);
+    }
+
+    public void saveUserToken(String accessToken, String refreshToken, UserEntity user) {
+        Token token = new Token(
+                accessToken,
+                refreshToken,
+                false,
+                user
+        );
+
+        tokenRepository.save(token);
+    }
+
+    public void revokeAllTokenByUser(UserEntity user) {
+        List<Token> validTokens = tokenRepository.findAllAccessTokensByUser(user.getId());
+
+        if(validTokens.isEmpty()) {
+            return;
+        }
+
+        validTokens.forEach( token ->
+                token.setLoggedOut(true)
+        );
+
+        tokenRepository.saveAll(validTokens);
+    }
+
+    public ResponseCookie setRefreshTokenCookie(String refreshToken) {
+        int setMaxToken = (int) (REFRESH_TOKEN_EXPIRE / 1000);
+        return ResponseCookie.from(REFRESH_TOKEN, refreshToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(setMaxToken)
+                .sameSite("Strict")
+                .build();
+    }
+
+    public String extraRefreshToken(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (REFRESH_TOKEN.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

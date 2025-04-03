@@ -1,36 +1,8 @@
-import { Button } from "@/components/ui/button";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useAuth } from "@/context/UseAuth";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+import LoginForm from "./components/login-form";
 
-type Props = {};
-
-type LoginFormsInputs = {
-    username: string;
-    password: string;
-}
-
-const validation = Yup.object().shape({
-    username: Yup.string().required("Username is required"),
-    password: Yup.string().required("Password is required"),
-});
-
-export const Login = (props: Props) => {
-
-    const { loginUser } = useAuth();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginFormsInputs>({ resolver: yupResolver(validation) });
-
-    const handleLogin = (form: LoginFormsInputs) => {
-        loginUser(form.username, form.password);
-    }
+export const Login = () => {
 
     return (
         <Card>
@@ -43,7 +15,7 @@ export const Login = (props: Props) => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form onSubmit={handleSubmit(handleLogin)}>
+                {/* <form onSubmit={handleSubmit(handleLogin)}>
                     <div className="flex flex-col gap-6">
                         <div className="grid gap-2">
                             <Label htmlFor="username">Username</Label>
@@ -82,12 +54,8 @@ export const Login = (props: Props) => {
                             Login
                         </Button>
                     </div>
-                    {/* {errors.username || errors.password ? (
-                <h1 className="mt-4 text-center text-sm text-red-500">
-                    {errors.username?.message}
-                </h1>
-            ) : ("")} */}
-                </form>
+                </form> */}
+                <LoginForm />
             </CardContent>
         </Card>
     );

@@ -1,6 +1,6 @@
 package com.Backend.Handler.Authentication;
 
-import com.Backend.Entity.UserEntity;
+import com.Backend.Entity.Authentication.UserEntity;
 import com.Backend.Service.Authentication.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

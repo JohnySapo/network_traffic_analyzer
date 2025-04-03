@@ -1,11 +1,35 @@
 package com.Backend.Model.Authentication;
 
-public class RegisterRequest {
-    private String username;
-    private String email;
-    private String password;
-    private String confirmPassword;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
+public class RegisterRequest {
+
+    @NotBlank(message = "Username is required!")
+    @Size(max = 9,  message = "Username must be max of 09 characters.")
+    private String username;
+
+    @NotBlank(message = "Email is required!")
+    @Email(message = "Email must be in in its format: email@domain.com")
+    private String email;
+
+    @NotBlank(message = "Password is required!")
+    @Size(max = 12, message = "Password must be a maximum of 12 characters.")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{1,12}$",
+            message = "Example: 'Password@5678'"
+    )
+    private String password;
+
+    @NotBlank(message = "Confirm Password is required!")
+    @Size(max = 12, message = "Confirm password must be a maximum of 12 characters.")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{1,12}$",
+            message = "Example: 'Password@5678'"
+    )
+    private String confirmPassword;
 
     public String getUsername() {
         return username;

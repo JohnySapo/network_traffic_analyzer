@@ -1,18 +1,15 @@
 package com.Backend.Service.Authentication;
 
 import com.Backend.Entity.Authentication.Token;
-import com.Backend.Entity.Role;
-import com.Backend.Entity.UserEntity;
+import com.Backend.Entity.Authentication.Role;
+import com.Backend.Entity.Authentication.UserEntity;
+import com.Backend.ExceptionHandler.CustomExceptionHandler;
 import com.Backend.Model.Authentication.AuthenticationResponse;
 import com.Backend.Model.Authentication.LoginRequest;
 import com.Backend.Model.Authentication.RegisterRequest;
 import com.Backend.Repository.Authentication.TokenRepository;
 import com.Backend.Repository.User.UserRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -21,19 +18,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
 import java.util.Optional;
-
 
 @Service
 public class AuthenticationService {
 
     @Value("${security.jwt.token.refresh-token-expiration}")
     private long REFRESH_TOKEN_EXPIRE;
-    private String REFRESH_TOKEN = "X-REFRESH-TOKEN";
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
@@ -60,17 +58,16 @@ public class AuthenticationService {
                 new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
 
         User userDetails = (User) authentication.getPrincipal();
-        String username = userDetails.getUsername();
 
-        UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        UserEntity user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("Username has not been registered yet!"));
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
-        revokeAllTokenByUser(user);
-        saveUserToken(accessToken, refreshToken, user);
-        ResponseCookie cookie = setRefreshTokenCookie(refreshToken);
+        jwtService.revokeAllTokenByUser(user);
+        jwtService.saveUserToken(accessToken, refreshToken, user);
+        ResponseCookie cookie = jwtService.setRefreshTokenCookie(refreshToken);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -79,13 +76,18 @@ public class AuthenticationService {
 
     public ResponseEntity<AuthenticationResponse> register(RegisterRequest body) {
         Optional<UserEntity> verifyUser = userRepository.findByUsername(body.getUsername());
+        Optional<UserEntity> verifyUserEmail = userRepository.findByEmail(body.getEmail());
 
         if (verifyUser.isPresent()) {
-            throw new IllegalArgumentException("Username already exist!");
+            throw new UsernameNotFoundException("Username is unavailable!");
+        }
+
+        if (verifyUserEmail.isPresent()) {
+            throw new UsernameNotFoundException("Email is unavailable!");
         }
 
         if (!body.getPassword().equals(body.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match!");
+            throw new IllegalIdentifierException("Password & Confirm password do not match!");
         }
 
         UserEntity user = new UserEntity();
@@ -98,8 +100,8 @@ public class AuthenticationService {
         String accessToken = jwtService.generateAccessToken(savedUser);
         String refreshToken = jwtService.generateRefreshToken(savedUser);
 
-        saveUserToken(accessToken, refreshToken, savedUser);
-        ResponseCookie cookie = setRefreshTokenCookie(refreshToken);
+        jwtService.saveUserToken(accessToken, refreshToken, savedUser);
+        ResponseCookie cookie = jwtService.setRefreshTokenCookie(refreshToken);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -107,7 +109,7 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) {
-        String refreshToken = extraRefreshToken(request);
+        String refreshToken = jwtService.extraRefreshToken(request);
 
         if (refreshToken == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
@@ -123,15 +125,15 @@ public class AuthenticationService {
 
         String username = jwtService.extractUsername(refreshToken);
         UserEntity user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new CustomExceptionHandler("User has not been found!"));
 
         if (jwtService.isRefreshTokenValid(refreshToken, user)) {
             String accessToken = jwtService.generateAccessToken(user);
             String newRefreshToken = jwtService.generateRefreshToken(user);
 
-            revokeAllTokenByUser(user);
-            saveUserToken(accessToken, newRefreshToken, user);
-            ResponseCookie cookie = setRefreshTokenCookie(newRefreshToken);
+            jwtService.revokeAllTokenByUser(user);
+            jwtService.saveUserToken(accessToken, newRefreshToken, user);
+            ResponseCookie cookie = jwtService.setRefreshTokenCookie(newRefreshToken);
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -142,49 +144,4 @@ public class AuthenticationService {
                 new AuthenticationResponse(null, "Invalid refresh token"));
     }
 
-    private ResponseCookie setRefreshTokenCookie(String refreshToken) {
-        int setMaxToken = (int) (REFRESH_TOKEN_EXPIRE / 1000);
-        return ResponseCookie.from(REFRESH_TOKEN, refreshToken)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(setMaxToken)
-                .sameSite("Strict")
-                .build();
-    }
-
-    private String extraRefreshToken(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (REFRESH_TOKEN.equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
-    private void saveUserToken(String accessToken, String refreshToken, UserEntity user) {
-        Token token = new Token(
-                accessToken,
-                refreshToken,
-                false,
-                user
-        );
-        tokenRepository.save(token);
-    }
-
-    private void revokeAllTokenByUser(UserEntity user) {
-        List<Token> validTokens = tokenRepository.findAllAccessTokensByUser(user.getId());
-
-        if(validTokens.isEmpty()) {
-            return;
-        }
-
-        validTokens.forEach( token ->
-                token.setLoggedOut(true)
-        );
-
-        tokenRepository.saveAll(validTokens);
-    }
 }

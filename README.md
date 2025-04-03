@@ -40,10 +40,10 @@ git clone https://github.com/JohnySapo/network_traffic_analyzer.git
 Open the Command-Line (CMD), System's shell or a similar Terminal, then change the directory to where the application is downloaded (Folder).
 
 ```bash
-Disk C:/Users/Your-Machine-Name/Where-Saved/network_traffic_analyzer
+Example: C:/Users/Your-Machine-Name/Where-Saved/network_traffic_analyzer
 ```
 
-Once inside the application directory, run the following Docker Command to remove any existing Container & Images of the application in your Docker/Docker Desktop. [ **Recommended**!! if you runned it before in an old version, do it to reset the configuration ]
+Once inside the application directory, run the following Docker Command to remove any existing Container & Images of the application in your Docker/Docker Desktop. [ **Recommended**!! if you runned the application before in an old version, do it to reset the configuration ]
 
 ```bash
 docker compose down --rmi all
@@ -68,7 +68,7 @@ http://localhost:5123
 ````
 ![app-main-page](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/app-main-page.jpg?raw=true)
 
-## Backend - API Design
+# Backend - API Design
 
 | Name | URL | Permission | HTTP Method |
 |---|---|---|---|

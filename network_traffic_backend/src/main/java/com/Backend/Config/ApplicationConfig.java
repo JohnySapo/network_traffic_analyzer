@@ -1,6 +1,6 @@
 package com.Backend.Config;
 
-import com.Backend.Entity.Role;
+import com.Backend.Entity.Authentication.Role;
 import com.Backend.Repository.User.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 public class ApplicationConfig {

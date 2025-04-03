@@ -1,6 +1,5 @@
 package com.Backend.Filter;
 
-import com.Backend.Repository.Authentication.TokenRepository;
 import com.Backend.Service.Authentication.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,14 +23,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final TokenRepository tokenRepository;
     private final UserDetailsService userDetailsService;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    public JwtAuthenticationFilter(JwtService jwtService, TokenRepository tokenRepository,UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.tokenRepository = tokenRepository;
         this.jwtService = jwtService;
     }
 

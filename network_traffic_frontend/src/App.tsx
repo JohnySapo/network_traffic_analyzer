@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { UserProvider } from "./context/UseAuth";
 import { Outlet } from "react-router-dom";
 

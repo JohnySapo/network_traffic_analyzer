@@ -19,7 +19,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
@@ -92,9 +91,9 @@ public class SecurityConfig {
                 .csrf(csrfConfig -> {
                     csrfConfig.csrfTokenRequestHandler(csrfAttributeHandler);
                     csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-                    csrfConfig.ignoringRequestMatchers("/auth/logout");
+                    csrfConfig.ignoringRequestMatchers("/auth/register", "/auth/logout", "/auth/refresh-token");
                 })
-                .addFilterBefore(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider)
                 .requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())

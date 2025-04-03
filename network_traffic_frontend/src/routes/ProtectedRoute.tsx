@@ -7,15 +7,15 @@ type Props = {
     requiredRole: string[];
 };
 
-const ProtectedRoute = ({ children, requiredRole }: Props) => {
+export const ProtectedRoute = ({ children, requiredRole }: Props) => {
     const location = useLocation();
-    const { user, isLoggedIn, isReady } = useAuth();
+    const { user, role, isLoggedIn, isReady } = useAuth();
 
     if (!isReady) {
         return <div>Loading...</div>;
     }
 
-    if (isLoggedIn() && user && requiredRole.includes(user.role)) {
+    if (isLoggedIn() && requiredRole.includes(role!.role) && user ) {
         return <>{children}</>;
     } else {
         return <Navigate to="/" state={{ from: location }} replace />;

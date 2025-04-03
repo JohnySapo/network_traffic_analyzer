@@ -1,45 +1,17 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import * as Yup from "yup";
-import { useAuth } from "@/context/UseAuth";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { 
+    Card, 
+    CardContent, 
+    CardDescription, 
+    CardHeader, 
+    CardTitle 
+} from "@/components/ui/card";
+import RegisterForm from "./components/register-form";
 
-type Props = {};
 
-type RegisterFormInput = {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
 
-const validation = Yup.object().shape({
-    username: Yup.string().required("Username is required"),
-    email: Yup.string().required("Email is required"),
-    password: Yup.string().required("Password is required"),
-    confirmPassword: Yup.string().required("Confirmation of password is required"),
-});
 
-export const Register = (props: Props) => {
+export const Register = () => {
 
-    const { registerUser } = useAuth();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<RegisterFormInput>({ resolver: yupResolver(validation) });
-
-    const handleRegister = (form: RegisterFormInput) => {
-        registerUser(
-            form.username,
-            form.email,
-            form.password,
-            form.confirmPassword
-        );
-    }
 
     return (
         <Card>
@@ -52,7 +24,8 @@ export const Register = (props: Props) => {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form onSubmit={handleSubmit(handleRegister)}>
+                <RegisterForm />
+                {/* <form onSubmit={handleSubmit(handleRegister)}>
                     <div className="flex flex-col gap-4">
                         <div className="grid gap-2">
                             <Label htmlFor="username">Username</Label>
@@ -114,12 +87,7 @@ export const Register = (props: Props) => {
                             Sign Up
                         </Button>
                     </div>
-                    {/* {errors.username || errors.password ? (
-                <h1 className="mt-4 text-center text-sm text-red-500">
-                    {errors.username?.message}
-                </h1>
-            ) : ("")} */}
-                </form>
+                </form> */}
             </CardContent>
         </Card>
     )

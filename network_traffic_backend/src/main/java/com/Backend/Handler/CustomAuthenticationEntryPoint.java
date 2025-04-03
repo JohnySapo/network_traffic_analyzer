@@ -19,7 +19,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             AuthenticationException authException)
             throws IOException, ServletException {
 
-        response.setHeader("finance-dashboard-error-reason", "Authentication failed");
+        response.setHeader("network-analyzer-error-reason", "Authentication failed");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json:charset=UTF-8");
 

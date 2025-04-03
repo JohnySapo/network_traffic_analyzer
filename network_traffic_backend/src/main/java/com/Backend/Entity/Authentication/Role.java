@@ -1,4 +1,4 @@
-package com.Backend.Entity;
+package com.Backend.Entity.Authentication;
 
 import org.springframework.security.core.GrantedAuthority;
 

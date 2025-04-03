@@ -1,6 +1,5 @@
 package com.Backend.Entity.Authentication;
 
-import com.Backend.Entity.UserEntity;
 import jakarta.persistence.*;
 
 @Entity

@@ -1,21 +1,37 @@
 package com.Backend.Controller.User;
 
+import com.Backend.Model.Authentication.AuthenticationResponse;
+import com.Backend.Model.User.ChangePasswordRequest;
+import com.Backend.Model.User.UserModel;
+import com.Backend.Service.User.UserService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> helloWorld() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    private final UserService userService;
 
-        return ResponseEntity.ok("Hello " + username);
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/account")
+    public ResponseEntity<UserModel> userAccount() {
+        return ResponseEntity.ok(userService.getUserAccount());
+    }
+
+    @PutMapping("/update-account")
+    public ResponseEntity<AuthenticationResponse> updateUserAccount(@Valid @RequestBody UserModel body) {
+        return userService.updateUserAccount(body);
+    }
+
+    @PutMapping("/update-password")
+    public ResponseEntity<AuthenticationResponse> updateUserPassword(@Valid @RequestBody ChangePasswordRequest body) {
+        return  userService.changeUserPassword(body);
     }
 }
