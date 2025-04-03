@@ -75,5 +75,7 @@ http://localhost:5123
 | Login | http://network-traffic-backend:8080/auth/login/ | Role ALL | POST |
 | Logout | http://network-traffic-backend:8080/auth/logout/ | Role ALL | POST |
 | Register | http://network-traffic-backend:8080/auth/register/ | Role ALL | POST |
-| User Info | http://network-traffic-backend:8080/user/hello/ | Role USER | GET |
+| User Info | http://network-traffic-backend:8080/user/account/ | Role USER | GET |
+| User Update Account | http://network-traffic-backend:8080/user/update-account/ | Role USER | PUT |
+| User Reset Password | http://network-traffic-backend:8080/user/update-password/ | Role USER | PUT |
 | |
