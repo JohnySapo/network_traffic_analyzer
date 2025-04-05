@@ -1,6 +1,6 @@
 
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/routes.tsx";
+import { router } from "@/routes/routes";
 import './index.css';
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
