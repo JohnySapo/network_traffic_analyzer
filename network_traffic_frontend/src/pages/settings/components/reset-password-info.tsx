@@ -7,7 +7,7 @@ export const ResetPassword = () => {
     const [isEdit, setIsEdit] = useState(false);
 
   return (
-    <div className="mt-7 me-40">
+    <div className="mt-7">
     {!isEdit ? (
         <div className="flex justify-between w-full">
             <div className="mt-5 w-screen">

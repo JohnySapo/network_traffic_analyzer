@@ -33,9 +33,8 @@ const platform = {
     { title: "Feedback", url: "#", icon: Send, },
   ],
   abuseips: [
-    { name: "Design Engineering", url: "#", icon: Frame },
-    { name: "Sales & Marketing", url: "#", icon: PieChart },
-    { name: "Travel", url: "#", icon: Map },
+    { name: "Reported IPs", url: "/reported", icon: Frame },
+    { name: "Search Abused IPs", url: "/search", icon: Map },
   ],
 }
 
