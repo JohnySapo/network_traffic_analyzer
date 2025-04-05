@@ -1,4 +1,5 @@
-import ResetPassword from "../components/profile-password";
+import ResetPassword from "../components/reset-password-info";
+
 
 export const ResetPasswordPage = () => {
   return (
@@ -8,7 +9,7 @@ export const ResetPasswordPage = () => {
       </h1>
       <ResetPassword />
     </div>
-  )
+  );
 }
 
 export default ResetPasswordPage;

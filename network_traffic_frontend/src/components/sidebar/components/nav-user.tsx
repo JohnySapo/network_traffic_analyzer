@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import { UserAccount } from "@/model/User";
+import { UserAccount } from "@/model/user";
 import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";

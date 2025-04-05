@@ -1,4 +1,4 @@
-import ProfileInfo from "../components/profile-info";
+import ProfileInfo from "../components/account-info";
 
 export const Account = () => {
     return (

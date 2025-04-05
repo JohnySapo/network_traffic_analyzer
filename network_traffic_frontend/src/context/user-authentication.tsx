@@ -13,7 +13,7 @@ import {
     UserRegister,
     UserPassword, 
     UserAuthenticationToken, 
-} from "@/model/User";
+} from "@/model/user";
 import { 
     loginAPI, 
     logoutAPI, 
@@ -21,8 +21,8 @@ import {
     UserAccountAPI,
     UpdatePasswordAPI, 
     UpdateUserAccountAPI, 
-} from "@/service/AuthService";
-import { CustomJwtPayload } from "@/entity/CustomJwtPayload";
+} from "@/service/authentication-servce";
+import { CustomJwtPayload } from "@/entity/custom-jwt-payload";
 import { jwtDecode } from "jwt-decode";
 
 type UserContextType = {
@@ -51,16 +51,16 @@ export const UserProvider = ({ children }: Props) => {
 
     useEffect(() => {
         const initialize = async () => {
-            const storedToken = localStorage.getItem("authToken");
+            const storedToken = localStorage.getItem("X-ACCESS-TOKEN");
             if (storedToken) {
                 try {
                     const decodedToken: CustomJwtPayload = jwtDecode(storedToken);
                     const data = await UserAccountAPI(storedToken);
-                    setUser(data.user.data);
+                    setUser(data!.user.data);
                     setRole({ role: decodedToken.role })
                     setToken(storedToken);
                 } catch (error) {
-                    localStorage.removeItem("authToken");
+                    localStorage.removeItem("X-ACCESS-TOKEN");
                 }
             }
             setIsReady(true);
@@ -70,18 +70,15 @@ export const UserProvider = ({ children }: Props) => {
 
     const registerUser = async (data: UserRegister) => {
         try {
-            console.log(data);
             const response = await registerAPI(data);
-            console.log(response?.data);
             if (response && response.data && response.data.status === 200 && response.data.data) {
                 const authentication: UserAuthenticationToken = response.data.data;
                 const decodedToken: CustomJwtPayload = jwtDecode(authentication.token);
                 const data = await UserAccountAPI(authentication.token);
-                console.log("User data: ", data);
-                setUser(data.user.data);
-                setRole({ role: decodedToken.role })
+                setUser(data!.user.data);
+                setRole({ role: decodedToken.role });
                 setToken(authentication.token);
-                localStorage.setItem("authToken", authentication.token);
+                localStorage.setItem("X-ACCESS-TOKEN", authentication.token);
                 navigate("/dashboard");
             }
         } catch (error: any) {
@@ -96,11 +93,10 @@ export const UserProvider = ({ children }: Props) => {
                 const authentication: UserAuthenticationToken = response.data.data;
                 const decodedToken: CustomJwtPayload = jwtDecode(authentication.token);
                 const data = await UserAccountAPI(authentication.token);
-                console.log("User data: ", data);
-                setUser(data.user.data);
+                setUser(data!.user.data);
                 setRole({ role: decodedToken.role });
                 setToken(authentication.token);
-                localStorage.setItem("authToken", authentication.token);
+                localStorage.setItem("X-ACCESS-TOKEN", authentication.token);
                 navigate("/dashboard");
             }
         } catch (error: any) {
@@ -110,14 +106,15 @@ export const UserProvider = ({ children }: Props) => {
 
     const updateProfile = async (data: UserAccount) => {
         try {
-            const response = await UpdateUserAccountAPI(token, data);
+            const response = await UpdateUserAccountAPI(token!, data);
             if (response && response.data && response.status === 200) {
                 const authentication: UserAuthenticationToken = response.data;
                 const decodedToken: CustomJwtPayload = jwtDecode(authentication.token);
                 const data = await UserAccountAPI(authentication.token);
-                setUser(data!.user.data)
+                setUser(data!.user.data);
+                setRole({ role: decodedToken.role });
                 setToken(authentication.token);
-                localStorage.setItem("authToken", authentication.token);
+                localStorage.setItem("X-ACCESS-TOKEN", authentication.token);
                 navigate("/dashboard/settings/account");
             }
         } catch (error: any) {
@@ -128,23 +125,23 @@ export const UserProvider = ({ children }: Props) => {
     const updatePassword = async (data: UserPassword) => {
         try {
             const response = await UpdatePasswordAPI(token!, data);
-            console.log(response);
             if(response && response.data && response.status === 200) {
                 const authentication: UserAuthenticationToken = response.data;
                 const decodedToken: CustomJwtPayload = jwtDecode(authentication.token);
                 const data = await UserAccountAPI(authentication.token);
-                setUser(data!.user.data)
+                setUser(data!.user.data);
+                setRole({ role: decodedToken.role });
                 setToken(authentication.token);
-                localStorage.setItem("authToken", authentication.token);
+                localStorage.setItem("X-ACCESS-TOKEN", authentication.token);
                 navigate("/dashboard/settings/reset-password");
             }
         } catch (error: any) {
-            throw new Error(error.message)
+            throw error;
         }
     }
 
     const isLoggedIn = () => {
-        return !!localStorage.getItem("authToken");
+        return !!localStorage.getItem("X-ACCESS-TOKEN");
     };
 
     const logout = async () => {
@@ -152,11 +149,11 @@ export const UserProvider = ({ children }: Props) => {
             try {
                 await logoutAPI(token);
             } catch (error) {
-                console.error("Logout API error:", error);
+                throw error;
             }
             setUser(null);
             setToken(null);
-            localStorage.removeItem("authToken");
+            localStorage.removeItem("X-ACCESS-TOKEN");
             navigate("/");
         }
     };
@@ -169,6 +166,5 @@ export const UserProvider = ({ children }: Props) => {
         </UserContext.Provider>
     );
 };
-
 
 export const useAuth = () => React.useContext(UserContext);

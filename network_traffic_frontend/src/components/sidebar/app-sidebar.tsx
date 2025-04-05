@@ -20,7 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/context/UseAuth";
+import { useAuth } from "@/context/user-authentication";
 import { Link } from "react-router-dom";
 
 

@@ -2,11 +2,12 @@ import {
     LOGIN,
     LOGOUT,
     REGISTER,
+    CSRF_TOKEN,
     REFRESH_TOKEN,
     USER_ACCOUNT,
     USER_UPDATE_ACCOUNT,
     USER_UPDATE_PASSWORD,
-} from "@/config/API-Config";
+} from "@/config/api-config";
 import { handleErrorResponse } from "@/handler/error-handler";
 import {
     UserLogin,
@@ -14,20 +15,20 @@ import {
     UserRegister,
     UserPassword,
     UserAuthenticationToken,
-} from "@/model/User";
+} from "@/model/user";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
 export const fetchCsrfToken = async () => {
     try {
         await axios.get(
-            "http://localhost:8080/csrf", 
+            CSRF_TOKEN, 
             { 
                 withCredentials: true
             });
         return Cookies.get("XSRF-TOKEN");
     } catch (error) {
-        console.error("Failed to fetch CSRF token", error);
+        handleErrorResponse(error);
     }
 };
 
@@ -35,6 +36,7 @@ export const registerAPI = async (
     register: UserRegister
 ): Promise<{ data: AxiosResponse<UserAuthenticationToken> } | undefined> => {
     try {
+        await fetchCsrfToken();
         const csrf = Cookies.get("XSRF-TOKEN");
         const data: AxiosResponse<UserAuthenticationToken> = await axios.post<UserAuthenticationToken>(
             REGISTER,
@@ -86,18 +88,13 @@ export const logoutAPI = async (token: string) => {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    // "Authorization": `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
                 },
                 withCredentials: true,
             }
         );
     } catch (error: any) {
-        if (axios.isAxiosError(error) && error.response) {
-            if (error.response.status === 400 || error.response.status === 404) {
-                throw new Error(error.response.data.message);
-            }
-        }
-        throw new Error("Something went wrong. Please try again later.");
+        handleErrorResponse(error);
     }
 };
 
@@ -105,6 +102,7 @@ export const UserAccountAPI = async (
     token: string
 ): Promise<{ user: AxiosResponse<UserAccount> } | undefined> => {
     try {
+        await fetchCsrfToken();
         const csrf = Cookies.get("XSRF-TOKEN");
         const user: AxiosResponse<UserAccount> = await axios.get<UserAccount>(
             USER_ACCOUNT, {
@@ -127,6 +125,7 @@ export const UpdateUserAccountAPI = async (
     account: UserAccount,
 ): Promise<AxiosResponse<UserAuthenticationToken> | undefined> => {
     try {
+        await fetchCsrfToken();
         const csrf = Cookies.get("XSRF-TOKEN");
         const response = await axios.put<UserAuthenticationToken>(
             USER_UPDATE_ACCOUNT,
@@ -151,7 +150,7 @@ export const UpdatePasswordAPI = async (
     password: UserPassword,
 ): Promise<AxiosResponse<UserAuthenticationToken> | undefined> => {
     try {
-
+        await fetchCsrfToken();
         const csrf = Cookies.get("XSRF-TOKEN");
         const response = await axios.put<UserAuthenticationToken>(
             USER_UPDATE_PASSWORD,
@@ -173,6 +172,7 @@ export const UpdatePasswordAPI = async (
 
 export const refreshTokenAPI = async (token: string) => {
     try {
+        await fetchCsrfToken();
         const csrf = Cookies.get("XSRF-TOKEN");
         const response = await axios.get(REFRESH_TOKEN, {
             headers: {
@@ -185,6 +185,6 @@ export const refreshTokenAPI = async (token: string) => {
 
         return response;
     } catch (error) {
-        return false;
+        handleErrorResponse(error);
     }
 };

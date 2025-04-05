@@ -1,6 +1,7 @@
 const URL = import.meta.env.VITE_API_PROXY;
 
 const API_ENDPOINTS = {
+    CSRF_TOKEN: `${URL}/auth/csrf-token`,
     REGISTER: `${URL}/auth/register`,
     LOGIN: `${URL}/auth/login`,
     LOGOUT: `${URL}/auth/logout`,
@@ -13,9 +14,10 @@ const API_ENDPOINTS = {
 export const { 
     LOGIN, 
     LOGOUT, 
-    REGISTER, 
+    REGISTER,
+    CSRF_TOKEN,
     REFRESH_TOKEN, 
     USER_ACCOUNT, 
     USER_UPDATE_ACCOUNT,
-    USER_UPDATE_PASSWORD
+    USER_UPDATE_PASSWORD,
 } = API_ENDPOINTS;

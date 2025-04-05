@@ -1,10 +1,10 @@
 import { App } from "@/App";
-import { Dashboard } from "@/pages/dashboard/Dashboard";
-import { HomePage } from "@/pages/home/Home";
-import { Layout } from "@/pages/layout/Layout";
-import { ProtectedRoute } from "./ProtectedRoute";
+import { Dashboard } from "@/pages/dashboard/dashboard";
+import { HomePage } from "@/pages/home/home"
+import { Layout } from "@/pages/layout/layout";
+import { ProtectedRoute } from "./protected-route";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { Settings } from "@/pages/settings/Settings";
+import { Settings } from "@/pages/settings/settings";
 import { Account } from "@/pages/settings/sub-pages/account";
 import { ResetPasswordPage } from "@/pages/settings/sub-pages/reset-password";
 

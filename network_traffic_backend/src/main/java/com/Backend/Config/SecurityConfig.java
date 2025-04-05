@@ -52,12 +52,12 @@ public class SecurityConfig {
     }
 
     /*
-    ** Security Chain Build for Web
-    ** CSRF TOKEN
-    ** CORS
-    ** Authorization for API End Points
-    ** Authentication Filters & Exception Handlers
-    * */
+     ** Security Chain Build for Web
+     ** CSRF TOKEN
+     ** CORS
+     ** Authorization for API End Points
+     ** Authentication Filters & Exception Handlers
+     * */
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -70,7 +70,7 @@ public class SecurityConfig {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList("http://localhost:5123"));
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:5123/"));
                         config.setAllowedHeaders(Arrays.asList(
                                 HttpHeaders.CONTENT_TYPE,
                                 HttpHeaders.AUTHORIZATION,
@@ -97,14 +97,16 @@ public class SecurityConfig {
                 .addFilterAfter(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider)
                 .requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
-                .authorizeHttpRequests( auth -> {
+                .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**").permitAll();
                     auth.requestMatchers("/user/**").hasAuthority("USER");
                     auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
                     auth.anyRequest().authenticated();
                 })
-                .formLogin(login ->
-                            login.successHandler(jwtAuthSuccessHandler)
+                .formLogin(login -> {
+                            login.loginPage("/");
+                            login.successHandler(jwtAuthSuccessHandler);
+                        }
                 )
                 .logout(logout -> {
                             logout.logoutUrl("/auth/logout");

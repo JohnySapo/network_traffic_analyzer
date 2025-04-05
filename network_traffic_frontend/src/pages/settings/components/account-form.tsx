@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/context/UseAuth";
+import { useAuth } from "@/context/user-authentication";
 import { useState } from "react";
 
 const FormSchema = z.object({
@@ -37,7 +37,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function AccountForm({ onCancel }: { onCancel?: () => void }) {
+export function AccountForm({ onCancel }: { onCancel: () => void }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -56,7 +56,7 @@ export function AccountForm({ onCancel }: { onCancel?: () => void }) {
     try {
       await updateProfile(data);
       toast("✅ Your account has been updated!");
-      onCancel?.();
+      onCancel();
     } catch (error: any) {
       toast(`❌ ${error.message}`);
     } finally {
@@ -101,7 +101,7 @@ export function AccountForm({ onCancel }: { onCancel?: () => void }) {
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
           {onCancel && (
-            <Button type="button" onClick={onCancel} className="cursor-pointer">
+            <Button type="button" onClick={onCancel} className="cursor-pointer dark:bg-slate-900 bg-slate-500 text-white dark:text-white dark:border-amber-50/50 border-zinc-500 border">
               Cancel
             </Button>
           )}

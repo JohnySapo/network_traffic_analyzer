@@ -8,9 +8,10 @@ import {
   FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/context/UseAuth";
+import { useAuth } from "@/context/user-authentication";
 import { PASSWORD_REGEX } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -41,7 +42,7 @@ const FormSchema = z.object({
   path: ["confirmNewPassword"],
 })
 
-export function ResetPassword() {
+export function ResetPasswordForm({ onCancel }: { onCancel: () => void }) {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -53,13 +54,18 @@ export function ResetPassword() {
   })
 
   const { updatePassword } = useAuth();
+  const [ isSubmitting, setIsSubmitting ] = useState(false);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsSubmitting(true);
     try {
       await updatePassword(data);
       toast("✅ Your password has been updated!");
+      onCancel();
     } catch (error: any) {
       toast(`❌ ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -96,12 +102,17 @@ export function ResetPassword() {
         ))}
         <div className="grid grid-cols-2 gap-2">
           <Button type="submit" className="cursor-pointer">
-            Submit
+            {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
+          {onCancel && (
+            <Button type="button" onClick={onCancel} className="cursor-pointer dark:bg-slate-900 bg-slate-500 text-white dark:text-white dark:border-amber-50/50 border-zinc-500 border">
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
     </Form>
   )
 }
 
-export default ResetPassword
+export default ResetPasswordForm;

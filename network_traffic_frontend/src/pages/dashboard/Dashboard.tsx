@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/sonner";
+
 
 export const Dashboard = () => {
 
@@ -28,7 +28,6 @@ export const Dashboard = () => {
         <h1 className="">Hellow</h1>
         <h1 className="">Hellow</h1>
       </div>
-      <Toaster />
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import { useAuth } from "@/context/UseAuth";
+import { useAuth } from "@/context/user-authentication";
 import { useState } from "react";
-import { AccountForm } from "../components/profile-form";
+import { AccountForm } from "./account-form";
 import { Button } from "@/components/ui/button";
 
 export const ProfileInfo = () => {
