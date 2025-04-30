@@ -53,12 +53,12 @@ public class SecurityConfig {
 
     /*
      ** Security Chain Build for Web
-     ** CSRF TOKEN
-     ** CORS
+     ** User Authentication & Role Management
+     ** CSRF TOKEN Protection (Cross-Site Request Forgery)
+     ** CORS Management (Cross-Origin Resource Sharing)
      ** Authorization for API End Points
      ** Authentication Filters & Exception Handlers
-     * */
-
+    */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         CsrfTokenRequestHandler csrfAttributeHandler = new CsrfTokenRequestAttributeHandler();
@@ -101,6 +101,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/auth/**").permitAll();
                     auth.requestMatchers("/user/**").hasAuthority("USER");
                     auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
+                    auth.requestMatchers("/abuseIP/**").hasAnyAuthority("ADMIN", "USER");
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(login -> {

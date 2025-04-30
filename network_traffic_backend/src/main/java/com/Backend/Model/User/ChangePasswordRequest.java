@@ -4,6 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/*
+ ** Change Password Model Request
+ ** to manage password change process API from frontend.
+*/
 public class ChangePasswordRequest {
 
     @NotBlank(message = "Current Password is required!")

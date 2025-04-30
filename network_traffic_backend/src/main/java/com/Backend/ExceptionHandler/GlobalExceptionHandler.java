@@ -13,9 +13,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ ** The GlobalException class
+ ** handles the exception flagged in all services
+ ** layers if the exception class is invoked or triggered.
+*/
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /*
+     ** Global Exception handle for any exception.
+    */
     @ExceptionHandler(CustomExceptionHandler.class)
     public ResponseEntity<ErrorResponse> handleCustomException(
             CustomExceptionHandler exception
@@ -28,6 +36,11 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /*
+     ** Bad Credential exception to capture
+     ** incorrect username or password or
+     ** authentication failure.
+    */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse>handleBadCredentialsException(
             BadCredentialsException exception
@@ -40,6 +53,11 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /*
+     ** Username not found exception to capture
+     ** if a username / user is not registered
+     ** on the database.
+    */
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFoundException(
             UsernameNotFoundException exception
@@ -52,26 +70,26 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    /*
+     ** Illegal Argument exception to capture
+     ** incorrect password entered by the user
+    */
     @ExceptionHandler(IllegalIdentifierException.class)
     public ResponseEntity<ErrorResponse> handleIllegalIdentifierException(
-            IllegalArgumentException exception
-    ) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), exception.getMessage(), "Password & Confirm Password does not match!"));
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
             IllegalArgumentException exception
     ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(
                         HttpStatus.BAD_REQUEST.value(),
                         exception.getMessage(),
-                        "Check the information and try again!")
+                        "Password & Confirm Password does not match!")
                 );
     }
 
+    /*
+     ** Method Argument exception for form submission
+     ** validation error if occurred during any form request.
+    */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException exception

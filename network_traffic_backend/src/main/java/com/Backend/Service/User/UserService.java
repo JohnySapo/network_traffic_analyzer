@@ -8,7 +8,6 @@ import com.Backend.Model.User.UserModel;
 import com.Backend.Repository.User.UserRepository;
 import com.Backend.Service.Authentication.JwtService;
 
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +35,11 @@ public class UserService  {
         this.jwtService = jwtService;
     }
 
+    /*
+     ** User Account information service layer
+     ** populating user's account once authenticated
+     ** from Security Context Holder
+    */
     public UserModel getUserAccount() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserEntity userData = userRepository.findByUsername(authentication.getName())
@@ -49,6 +53,12 @@ public class UserService  {
         );
     }
 
+    /*
+     ** User Update Account information service layer
+     ** updating the user's account once authenticated
+     ** using the Security Context Holder and HTTP Response
+     ** for controller layer (URL API)
+    */
     public ResponseEntity<AuthenticationResponse> updateUserAccount(UserModel body) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserEntity user = userRepository.findByUsername(authentication.getName())
@@ -84,6 +94,12 @@ public class UserService  {
                 .body(new AuthenticationResponse(newAccessToken,"Token renewed successfully."));
     }
 
+    /*
+     ** User Change Password information service layer
+     ** updating the user's password once authenticated
+     ** using the Security Context Holder and HTTP Response
+     ** for controller layer (URL API)
+    */
     public ResponseEntity<AuthenticationResponse> changeUserPassword(ChangePasswordRequest body) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserEntity user = userRepository.findByUsername(authentication.getName())

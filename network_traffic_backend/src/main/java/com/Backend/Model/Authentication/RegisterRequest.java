@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/*
+ ** Register Model Request
+ ** to manage register process API from frontend.
+*/
 public class RegisterRequest {
 
     @NotBlank(message = "Username is required!")

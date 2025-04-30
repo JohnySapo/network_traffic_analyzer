@@ -4,6 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/*
+ ** Login Model Request
+ ** to manage login process API from frontend.
+*/
 public class LoginRequest {
 
     @NotBlank(message = "Username is required!")

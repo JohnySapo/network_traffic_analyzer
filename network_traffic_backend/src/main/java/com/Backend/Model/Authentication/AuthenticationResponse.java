@@ -1,5 +1,9 @@
 package com.Backend.Model.Authentication;
 
+/*
+ ** JWT Authentication Model response
+ ** to manage token service during authentication process
+*/
 public class AuthenticationResponse {
     private String token;
     private String message;

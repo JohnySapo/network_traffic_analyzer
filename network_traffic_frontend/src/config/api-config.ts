@@ -9,6 +9,9 @@ const API_ENDPOINTS = {
     USER_ACCOUNT: `${URL}/user/account`,
     USER_UPDATE_ACCOUNT: `${URL}/user/update-account`,
     USER_UPDATE_PASSWORD: `${URL}/user/update-password`,
+    ABUSEIP_BLACKLIST_IP_ADDRESSES: `${URL}/abuseIP/blacklist`,
+    ABUSEIP_BLACKLIST_HEADER: `${URL}/abuseIP/header-report`,
+    ABUSEIP_CHECK_IP_ADDRESS: `${URL}/abuseIP/check`,
 }
 
 export const { 
@@ -20,4 +23,7 @@ export const {
     USER_ACCOUNT, 
     USER_UPDATE_ACCOUNT,
     USER_UPDATE_PASSWORD,
+    ABUSEIP_BLACKLIST_IP_ADDRESSES,
+    ABUSEIP_BLACKLIST_HEADER,
+    ABUSEIP_CHECK_IP_ADDRESS,
 } = API_ENDPOINTS;

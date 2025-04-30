@@ -9,6 +9,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/*
+ ** Csrf Token Filter to obtain the
+ ** CSRF Token during any request
+*/
 public class CsrfCookieFilter extends OncePerRequestFilter {
 
     @Override

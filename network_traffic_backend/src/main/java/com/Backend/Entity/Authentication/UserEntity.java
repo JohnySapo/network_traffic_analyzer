@@ -9,12 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 /*
-** Entity class for create a Schema
-** Called "user_network" on Database PostgreSQL.
-** Each user will obtain one Role (ADMIN or USER)
-** And the username will be setup based his/her choice.
-* */
-
+ ** Entity class for create a Schema
+ ** Called "user_network" on Database PostgreSQL.
+ ** Each user will obtain one Role (ADMIN or USER)
+ ** And the username will be setup based his/her choice.
+*/
 @Entity
 @Table(name = "user_network")
 public class UserEntity implements UserDetails{
@@ -76,7 +75,6 @@ public class UserEntity implements UserDetails{
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     public void setUsername(String username) {
         this.username = username;

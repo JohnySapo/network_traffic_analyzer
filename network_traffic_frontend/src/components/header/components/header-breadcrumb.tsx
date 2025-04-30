@@ -5,8 +5,8 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-import { PageTitle } from '@/lib/utils';
+} from "@/components/ui/breadcrumb";
+import { PageTitle } from "@/lib/utils";
 
 export const HeaderBreadcrumb = () => {
     const { mainPage, subPage } = PageTitle();

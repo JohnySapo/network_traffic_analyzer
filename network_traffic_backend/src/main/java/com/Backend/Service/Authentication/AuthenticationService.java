@@ -53,6 +53,11 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
     }
 
+    /*
+     ** Login service layer to manage username & password
+     ** authenticating and authorizing via JWT and Authority
+     ** also allowing HTTP response from backend to frontend
+    */
     public ResponseEntity<AuthenticationResponse> login(LoginRequest body) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(body.getUsername(), body.getPassword()));
@@ -74,6 +79,11 @@ public class AuthenticationService {
                 .body(new AuthenticationResponse(accessToken, "Login successful!"));
     }
 
+    /*
+     ** Register service layer to register email, username, password & confirm password,
+     ** authenticating and authorizing via JWT and Authority
+     ** also allowing HTTP response from backend to frontend
+     */
     public ResponseEntity<AuthenticationResponse> register(RegisterRequest body) {
         Optional<UserEntity> verifyUser = userRepository.findByUsername(body.getUsername());
         Optional<UserEntity> verifyUserEmail = userRepository.findByEmail(body.getEmail());
@@ -108,6 +118,11 @@ public class AuthenticationService {
                 .body(new AuthenticationResponse(accessToken, "Register successful!"));
     }
 
+    /*
+     ** Refresh token service layer to manage user's
+     ** authenticating and authorizing via Access & Refresh JWT Token
+     ** also allowing HTTP response from backend to frontend
+    */
     public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) {
         String refreshToken = jwtService.extraRefreshToken(request);
 

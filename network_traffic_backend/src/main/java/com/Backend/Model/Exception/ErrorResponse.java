@@ -1,5 +1,9 @@
 package com.Backend.Model.Exception;
 
+/*
+ ** Error Model Response
+ ** to manage error message handling
+*/
 public class ErrorResponse {
     private int status;
     private String message;

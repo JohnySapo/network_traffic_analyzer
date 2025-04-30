@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/*
+ ** Simple JWT Authentication Success Handler class
+ ** for Authentication, generation of JWT token and Logger
+*/
 @Component
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 

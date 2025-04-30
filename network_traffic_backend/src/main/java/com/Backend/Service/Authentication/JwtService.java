@@ -36,19 +36,34 @@ public class JwtService {
         this.tokenRepository = tokenRepository;
     }
 
+    /*
+     ** Encoding the Secret Key in BASE64
+     ** using the bean annotation PostConstruct
+     ** during Initialization
+    */
     @PostConstruct
     protected void init() {
         SECRET_KEY = Base64.getEncoder().encodeToString(SECRET_KEY.getBytes());
     }
 
+    /*
+     ** Generate Access Token for the user request
+    */
     public String generateAccessToken(UserDetails user) {
         return createToken(user, ACCESS_TOKEN_EXPIRE);
     }
 
+    /*
+     ** Generate Refresh Token for the user request
+    */
     public String generateRefreshToken(UserDetails user) {
         return createToken(user, REFRESH_TOKEN_EXPIRE);
     }
 
+    /*
+     ** Create JWT Token based on username, role
+     ** issued time & expiration time
+    */
     public String createToken(UserDetails user, long expireTime) {
         // Current time
         Date now = new Date(System.currentTimeMillis());
@@ -66,6 +81,9 @@ public class JwtService {
                 .sign(algorithm);
     }
 
+    /*
+     ** Extract username from the JWT Token
+    */
     public String extractUsername(String token) {
         return JWT.require(Algorithm.HMAC256(SECRET_KEY))
                 .build()
@@ -73,6 +91,10 @@ public class JwtService {
                 .getSubject();
     }
 
+    /*
+     ** Validating the Access Token
+     ** based on username, expiration and logout status
+    */
     public boolean isAccessTokenValid(String token, UserDetails user) {
         String username = extractUsername(token);
         boolean validToken = tokenRepository
@@ -83,6 +105,10 @@ public class JwtService {
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
     }
 
+    /*
+     ** Validating the Refresh Token
+     ** based on username, expiration and logout status
+    */
     public boolean isRefreshTokenValid(String token, UserEntity user) {
         String username = extractUsername(token);
         boolean validRefreshToken = tokenRepository
@@ -93,14 +119,24 @@ public class JwtService {
         return (username.equals(user.getUsername())) && !isTokenExpired(token) && validRefreshToken;
     }
 
+    /*
+     ** Verification of token expiration
+    */
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
+    /*
+     ** Extraction of the token's expiration date
+    */
     private Date extractExpiration(String token) {
         return extractClaim(token).getExpiresAt();
     }
 
+    /*
+     ** Decode & verification of token
+     ** to allow the extraction of the claims
+    */
     private DecodedJWT extractClaim(String token) {
         return JWT
                 .require(Algorithm.HMAC256(SECRET_KEY))
@@ -108,6 +144,10 @@ public class JwtService {
                 .verify(token);
     }
 
+    /*
+     ** Save Access & Refresh token
+     ** for the user into the database
+    */
     public void saveUserToken(String accessToken, String refreshToken, UserEntity user) {
         Token token = new Token(
                 accessToken,
@@ -119,6 +159,10 @@ public class JwtService {
         tokenRepository.save(token);
     }
 
+    /*
+     ** Revoke all Access & Refresh token
+     ** for the user from the database
+    */
     public void revokeAllTokenByUser(UserEntity user) {
         List<Token> validTokens = tokenRepository.findAllAccessTokensByUser(user.getId());
 
@@ -133,6 +177,11 @@ public class JwtService {
         tokenRepository.saveAll(validTokens);
     }
 
+    /*
+     ** Set the Refresh Token as a secure method
+     ** via httpOnly Cookie HTTP Request
+     ** including expiration time
+    */
     public ResponseCookie setRefreshTokenCookie(String refreshToken) {
         int setMaxToken = (int) (REFRESH_TOKEN_EXPIRE / 1000);
         return ResponseCookie.from(REFRESH_TOKEN, refreshToken)
@@ -144,6 +193,10 @@ public class JwtService {
                 .build();
     }
 
+    /*
+     ** Extraction of the Refresh Token
+     ** from the httpOnly Cookie in the HTTP Request
+    */
     public String extraRefreshToken(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {

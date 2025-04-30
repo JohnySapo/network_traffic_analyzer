@@ -1,7 +1,7 @@
 import { ModeToggle } from "@/components/theme/mode-toggle";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import HeaderBreadcrumb from "./components/header-breadcrumb";
+import { HeaderBreadcrumb } from "@/components/header/components/header-breadcrumb";
 
 export const AppHeader = () => {
 

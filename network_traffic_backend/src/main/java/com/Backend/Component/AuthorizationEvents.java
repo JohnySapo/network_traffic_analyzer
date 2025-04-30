@@ -6,6 +6,12 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.authorization.event.AuthorizationEvent;
 import org.springframework.stereotype.Component;
 
+/*
+ ** The Authorization events only serve to log information
+ ** when a user has logged in to the application via frontend
+ ** or any error occurred during the Authorization
+ */
+
 @Component
 public class AuthorizationEvents {
 

@@ -20,16 +20,28 @@ public class UserController {
         this.userService = userService;
     }
 
+    /*
+     ** Account endpoint to provider user's data from database
+     ** URL endpoint: localhost:port/user/account
+    */
     @GetMapping("/account")
     public ResponseEntity<UserModel> userAccount() {
         return ResponseEntity.ok(userService.getUserAccount());
     }
 
+    /*
+     ** Update Account endpoint to update user's data from database
+     ** URL endpoint: localhost:port/user/update-account
+    */
     @PutMapping("/update-account")
     public ResponseEntity<AuthenticationResponse> updateUserAccount(@Valid @RequestBody UserModel body) {
         return userService.updateUserAccount(body);
     }
 
+    /*
+     ** Update password endpoint to update  user's password from database
+     ** URL endpoint: localhost:port/user/update-password
+    */
     @PutMapping("/update-password")
     public ResponseEntity<AuthenticationResponse> updateUserPassword(@Valid @RequestBody ChangePasswordRequest body) {
         return  userService.changeUserPassword(body);

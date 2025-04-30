@@ -70,13 +70,41 @@ http://localhost:5123
 
 # Backend - API Design
 
+### Authentication API Endpoints
+
 | Name | URL | Permission | HTTP Method |
 |---|---|---|---|
-| Login | http://network-traffic-backend:8080/auth/login/ | Role ALL | POST |
-| Logout | http://network-traffic-backend:8080/auth/logout/ | Role ALL | POST |
-| Register | http://network-traffic-backend:8080/auth/register/ | Role ALL | POST |
-| CSRF Token Provider | http://network-traffic-backend:8080/auth/csrf-token/ | Role ALL | GET |
-| User Info | http://network-traffic-backend:8080/user/account/ | Role USER | GET |
-| User Update Account | http://network-traffic-backend:8080/user/update-account/ | Role USER | PUT |
-| User Reset Password | http://network-traffic-backend:8080/user/update-password/ | Role USER | PUT |
+| Login | http://network-traffic-backend:8080/auth/login/ | Role ADMIN & USER | POST |
+| Logout | http://network-traffic-backend:8080/auth/logout/ | Role ADMIN & USER | POST |
+| Register | http://network-traffic-backend:8080/auth/register/ | Role ADMIN & USER | POST |
+| CSRF Token Provider | http://network-traffic-backend:8080/auth/csrf-token/ | Role ADMIN & USER | GET |
 | |
+
+### User Account API Endpoints
+
+| Name | URL | Permission | HTTP Method |
+|---|---|---|---|
+| Account Info | http://network-traffic-backend:8080/user/account/ | Role USER | GET |
+| Update Account | http://network-traffic-backend:8080/user/update-account/ | Role USER | PUT |
+| Reset Password | http://network-traffic-backend:8080/user/update-password/ | Role USER | PUT |
+| |
+
+### Abuse IP Database API Endpoints
+
+| Name | URL | Permission | HTTP Method |
+|---|---|---|---|
+| Blacklist IP Addresses| http://network-traffic-backend:8080/abuseIP/blacklist/ | Role ADMIN & USER | GET |
+| Header Report | http://network-traffic-backend:8080/abuseIP/header-report/ | Role ADMIN & USER | GET |
+| Check IP Address | http://network-traffic-backend:8080/abuseIP/check/ | Role ADMIN & USER | GET |
+| |
+
+#### API Endpoints Parameters
+
+Check IP Address Parameters
+```bash
+/abuseIP/check?ipAddress=0.0.0.0
+```
+Blacklist IP Address Parameters
+```bash
+/abuseIP/blacklist?countryCode=IE&page=0&size=12&sort=lastReportedAt,desc
+```

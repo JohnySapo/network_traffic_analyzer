@@ -10,6 +10,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/*
+ ** Simple Custom Authentication Entry Point JSON exception display
+*/
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override

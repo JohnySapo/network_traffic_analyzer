@@ -7,8 +7,8 @@ import { Dashboard } from "@/pages/dashboard/dashboard";
 import { Account } from "@/pages/settings/sub-pages/account";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ResetPasswordPage } from "@/pages/settings/sub-pages/reset-password";
-import ReportedIPs from "@/pages/reported/reported-ips";
-import SearchIPs from "@/pages/search/search-ips";
+import { ReportedIPs } from "@/pages/reported/reported-ips";
+import { SearchIPs } from "@/pages/search/search-ips";
 
 export const router = createBrowserRouter([
     {

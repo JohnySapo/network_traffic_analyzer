@@ -1,4 +1,4 @@
-import ProfileInfo from "../components/account-info";
+import { ProfileInfo } from "@/pages/settings/components/account-info";
 
 export const Account = () => {
     return (

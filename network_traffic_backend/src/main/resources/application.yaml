@@ -5,6 +5,7 @@ spring:
     name: network_traffic_backend
   config:
     import:
+      - optional:classpath:config/abuseapi.properties
       - optional:classpath:config/logger.properties
       - optional:classpath:config/jpaconfig.properties
       - optional:classpath:config/jwttoken.properties
@@ -23,7 +24,7 @@ logging:
   level:
     org:
       springframework.web: ${LOGGER_LEVEL}
-      springframework.web.reactive.function.client.WebClient: ${LOGGER_LEVEL}
+      springframework.web.reactive.function.client.WebClient: ${LOGGER_LEVEL}`
       springframework.security: ${LOGGER_LEVEL}
       springframework.security.web.csrf: ${LOGGER_LEVEL}
       apache.tomcat.util.http.parser.Cookie: ${LOGGER_LEVEL}
@@ -34,3 +35,10 @@ security:
       secret-key: ${JWT_SECRET}
       access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
       refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
+
+abuseip:
+  api:
+    key: ${ABUSEIP_API_KEY}
+    url:
+      check: ${ABUSEIP_API_URL_CHECK}
+      blacklist: ${ABUSEIP_API_URL_BLACKLIST}

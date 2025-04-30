@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,10 @@ public class ApplicationConfig {
         this.userRepository = userRepository;
     }
 
+    /*
+     ** UserDetailsService class for retrieving
+     ** the user's information during the login/register process
+    */
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)
@@ -43,6 +48,10 @@ public class ApplicationConfig {
                 .orElseThrow(() -> new UsernameNotFoundException("UserEntity not found!"));
     }
 
+    /*
+     ** Map of Spring GrandAuthority to retrieve
+     ** the appropriate user's role (ADMIN | USER)
+    */
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Role role) {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
@@ -65,6 +74,10 @@ public class ApplicationConfig {
         return new HaveIBeenPwnedRestApiPasswordChecker();
     }
 
+    /*
+     ** Authentication manager to setup a custom
+     ** authentication for the user during login/register process
+     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -73,8 +86,22 @@ public class ApplicationConfig {
         return authProvider;
     }
 
+    /*
+     ** Authentication manager to setup a custom
+     ** authentication for the user during login/register process
+    */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    /*
+     ** RestTemplate @bean annotation to allow
+     ** the management of the use http/API request and
+     ** method for usability of AbuseIPDB API
+    */
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

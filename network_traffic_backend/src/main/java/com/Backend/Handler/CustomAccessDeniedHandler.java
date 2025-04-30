@@ -10,6 +10,10 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+
+/*
+ ** Simple Custom Access Denied JSON exception display
+*/
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(

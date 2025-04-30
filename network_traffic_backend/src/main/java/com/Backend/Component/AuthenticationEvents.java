@@ -7,6 +7,11 @@ import org.springframework.security.authentication.event.AbstractAuthenticationF
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
 
+/*
+ ** The Authentication events only serve to log information
+ ** when a user has logged in to the application via frontend
+ ** or any error occurred during the authentication
+*/
 @Component
 public class AuthenticationEvents {
 

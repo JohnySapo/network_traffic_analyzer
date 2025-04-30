@@ -2,7 +2,6 @@ import {
     LOGIN,
     LOGOUT,
     REGISTER,
-    CSRF_TOKEN,
     REFRESH_TOKEN,
     USER_ACCOUNT,
     USER_UPDATE_ACCOUNT,
@@ -17,20 +16,9 @@ import {
     UserAuthenticationToken,
 } from "@/model/user";
 import axios, { AxiosResponse } from "axios";
+import { fetchCsrfToken } from "@/service/csrf-token-service";
 import Cookies from "js-cookie";
 
-export const fetchCsrfToken = async () => {
-    try {
-        await axios.get(
-            CSRF_TOKEN, 
-            { 
-                withCredentials: true
-            });
-        return Cookies.get("XSRF-TOKEN");
-    } catch (error) {
-        handleErrorResponse(error);
-    }
-};
 
 export const registerAPI = async (
     register: UserRegister

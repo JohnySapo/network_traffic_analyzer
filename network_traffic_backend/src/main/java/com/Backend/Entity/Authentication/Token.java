@@ -2,6 +2,12 @@ package com.Backend.Entity.Authentication;
 
 import jakarta.persistence.*;
 
+/*
+ ** The Token Entity class manages
+ ** all token generates and save to PostgresSQL database
+ ** where all access & refresh tokens are validates
+ ** if there are logged-out or not. (boolean)
+*/
 @Entity
 @Table(name = "jwt_token")
 public class Token {

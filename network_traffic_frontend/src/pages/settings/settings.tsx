@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import NavSettings from "./components/nav-settings";
+import { NavSettings } from "@/pages/settings/components/nav-settings";
 
 export const Settings = () => {
 

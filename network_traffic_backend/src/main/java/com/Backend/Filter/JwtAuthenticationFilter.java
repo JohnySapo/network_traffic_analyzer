@@ -19,6 +19,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+
+/*
+ ** JWT Authentication filter for validation & logger
+ ** for any request that contains the access token.
+*/
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

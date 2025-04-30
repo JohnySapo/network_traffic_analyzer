@@ -4,9 +4,8 @@ import {
   LayoutDashboard,
   LifeBuoy,
   Map,
-  PieChart,
   Send,
-} from "lucide-react"
+} from "lucide-react";
 import { NavMain } from "@/components/sidebar/components/nav-man";
 import { NavAbuseIPs } from "@/components/sidebar/components/nav-abuseips";
 import { NavSecondary } from "@/components/sidebar/components/nav-secondary";
@@ -33,8 +32,8 @@ const platform = {
     { title: "Feedback", url: "#", icon: Send, },
   ],
   abuseips: [
-    { name: "Reported IPs", url: "/reported", icon: Frame },
     { name: "Search Abused IPs", url: "/search", icon: Map },
+    { name: "Reported IPs", url: "/reported", icon: Frame },
   ],
 }
 

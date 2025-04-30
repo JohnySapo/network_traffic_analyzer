@@ -4,6 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+/*
+ ** User Data Model Request
+ ** to manage user update account info
+ **  process API from frontend.
+*/
 public class UserModel {
 
     @NotBlank(message = "Username is required!")

@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import ResetPasswordForm from './reset-password-form';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ResetPasswordForm } from "@/pages/settings/components/reset-password-form";
 
 export const ResetPassword = () => {
 
