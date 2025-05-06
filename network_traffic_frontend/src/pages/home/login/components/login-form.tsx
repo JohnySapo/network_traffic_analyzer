@@ -25,8 +25,8 @@ const FormSchema = z.object({
     }),
     password: z.string().min(1, {
         message: "Password is required!"
-    }).max(12, {
-        message: "Current Password must be max of 12 characters.",
+    }).min(12, {
+        message: "Current Password must be minimum of 12 characters.",
     }).regex(PASSWORD_REGEX, {
         message: "Your password must follow the format: 'Password@5678'",
     }),

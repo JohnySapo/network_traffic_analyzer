@@ -55,8 +55,8 @@ public class AbuseIPService {
      ** to update the database and to avoid waisting the 5 fetch request
      ** from AbuseIPDB API
     */
-   @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
-    // @Scheduled(cron = "0 0 0 * * *")
+//   @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+     @Scheduled(cron = "0 0 0 * * *")
     public void saveBlacklistToDatabase() {
         HttpHeaders header = new HttpHeaders();
         header.set(KEY_ANNOTATION, KEY_VALUE);

@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Optional;
 
-
 /*
  ** Simple JWT Logout Success Handler class
  ** for Authentication, clear SecurityContext and

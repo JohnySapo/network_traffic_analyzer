@@ -8,11 +8,11 @@ export type BlacklistHeaderModel = {
 }
 
 export type BlacklistModel = {
-    id: number
-    ipAddress: string
-    countryCode: string
-    abuseConfidenceScore: number
-    lastReportedAt: Date | string
+    id: number;
+    ipAddress: string;
+    countryCode: string;
+    abuseConfidenceScore: number;
+    lastReportedAt: Date | string;
 }
 
 export type BlacklistPagingModel = {
@@ -31,7 +31,7 @@ export type PageableData = {
 }
 
 export type BlacklistDataFilter = {
-    countryCode?: string
-    abuseScore?: string
-    lastReportedDate?: Date
+    countryCode?: string;
+    abuseScore?: string;
+    lastReportedDate?: Date;
 }

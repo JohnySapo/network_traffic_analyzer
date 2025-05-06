@@ -1,8 +1,8 @@
 package com.Backend.Config;
 
 import com.Backend.Handler.Authentication.JwtLogoutSuccessHandler;
-import com.Backend.Handler.CustomAccessDeniedHandler;
-import com.Backend.Handler.CustomAuthenticationEntryPoint;
+import com.Backend.Handler.CustomHandler.CustomAccessDeniedHandler;
+import com.Backend.Handler.CustomHandler.CustomAuthenticationEntryPoint;
 import com.Backend.Filter.CsrfCookieFilter;
 import com.Backend.Filter.JwtAuthenticationFilter;
 import com.Backend.Handler.Authentication.JwtAuthenticationSuccessHandler;
@@ -91,7 +91,7 @@ public class SecurityConfig {
                 .csrf(csrfConfig -> {
                     csrfConfig.csrfTokenRequestHandler(csrfAttributeHandler);
                     csrfConfig.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-                    csrfConfig.ignoringRequestMatchers("/auth/register", "/auth/logout", "/auth/refresh-token");
+                    csrfConfig.ignoringRequestMatchers("/auth/logout");
                 })
                 .addFilterAfter(new CsrfCookieFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(JwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -102,6 +102,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/user/**").hasAuthority("USER");
                     auth.requestMatchers("/admin/**").hasAuthority("ADMIN");
                     auth.requestMatchers("/abuseIP/**").hasAnyAuthority("ADMIN", "USER");
+                    auth.requestMatchers("/network-packet/**").hasAnyAuthority("ADMIN", "USER");
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(login -> {

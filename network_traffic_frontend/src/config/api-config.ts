@@ -12,6 +12,8 @@ const API_ENDPOINTS = {
     ABUSEIP_BLACKLIST_IP_ADDRESSES: `${URL}/abuseIP/blacklist`,
     ABUSEIP_BLACKLIST_HEADER: `${URL}/abuseIP/header-report`,
     ABUSEIP_CHECK_IP_ADDRESS: `${URL}/abuseIP/check`,
+    PACKET_CAPTURE_START: `${URL}/network-packet/start-packet`,
+    PACKET_CAPTURE_LOG_REPORT: `${URL}/network-packet/packet-report`,
 }
 
 export const { 
@@ -26,4 +28,6 @@ export const {
     ABUSEIP_BLACKLIST_IP_ADDRESSES,
     ABUSEIP_BLACKLIST_HEADER,
     ABUSEIP_CHECK_IP_ADDRESS,
+    PACKET_CAPTURE_START,
+    PACKET_CAPTURE_LOG_REPORT,
 } = API_ENDPOINTS;

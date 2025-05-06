@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-
 const FormSchema = z.object({
     username: z.string().min(1, {
         message: "Username is required!"
@@ -23,15 +22,15 @@ const FormSchema = z.object({
     }),
     password: z.string().min(1, {
         message: "Password is required!"
-    }).max(12, {
-        message: "Password must be max of 12 characters.",
+    }).min(12, {
+        message: "Password must be minimum of 12 characters.",
     }).regex(PASSWORD_REGEX, {
         message: "Your password must follow the format: 'Password@5678'",
     }),
     confirmPassword: z.string().min(1, {
         message: "Confirm Password is required!"
-    }).max(12, {
-        message: "Confirm Password must be max of 12 characters.",
+    }).min(12, {
+        message: "Confirm Password must be minimum of 12 characters.",
     }).regex(PASSWORD_REGEX, {
         message: "Your confirm password must follow the format: 'Password@5678'",
     }),

@@ -2,8 +2,7 @@ import {
   ABUSEIP_BLACKLIST_HEADER,
   ABUSEIP_CHECK_IP_ADDRESS,
   ABUSEIP_BLACKLIST_IP_ADDRESSES,
-}
-  from "@/config/api-config";
+}from "@/config/api-config";
 import {
   BlacklistHeaderModel,
   BlacklistPagingModel

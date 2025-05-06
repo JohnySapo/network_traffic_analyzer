@@ -20,17 +20,17 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "Password is required!")
-    @Size(max = 12, message = "Password must be a maximum of 12 characters.")
+    @Size(min = 12, message = "Password must be a minimum of 12 characters.")
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{1,12}$",
+            regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).*$",
             message = "Example: 'Password@5678'"
     )
     private String password;
 
     @NotBlank(message = "Confirm Password is required!")
-    @Size(max = 12, message = "Confirm password must be a maximum of 12 characters.")
+    @Size(min = 12, message = "Confirm password must be a minimum of 12 characters.")
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{1,12}$",
+            regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).*$",
             message = "Example: 'Password@5678'"
     )
     private String confirmPassword;

@@ -19,4 +19,4 @@ export const PageTitle = () => {
   return { mainPage, subPage, mainPagePath: `/dashboard/${path[0]}` };
 };
 
-export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{1,12}$/;
+export const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{12,}$/;
