@@ -138,7 +138,7 @@ Navigate to package and select **vite.config.ts** file : network_traffic_fronten
 
 Now uncomment the `localhost:8081` and comment the `network-traffic-backend:8080`.
 
-![vite-proxy-ports](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/vite-proxy-ports.jpg?raw=true)
+![vite-proxy-port](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/vite-proxy-port.jpg?raw=true)
 
 In your VSCode open the terminal and run the command `npm run dev`
 
