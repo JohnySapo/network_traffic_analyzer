@@ -1,27 +1,28 @@
 import { useState, useEffect } from "react";
-import { 
-  Activity, 
-  Filter, 
-  Info, 
-  RefreshCw, 
-  Shield, 
-  Zap 
+import {
+  Activity,
+  Filter,
+  Info,
+  RefreshCw,
+  Shield,
+  Zap
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
 import { PacketToolTip } from "./components/packet-tooltip";
 import { PacketTable } from "./components/packet-table";
 import { PacketCaptureModel } from "@/model/packet";
@@ -48,28 +49,27 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (!isLivePacket || !token) return;
-  
+
     const interval = setInterval(async () => {
       const response = await PacketCaptureLoggerReportAPI(token);
-  
+
       if (response?.data.length) {
         const newPacketCapture = response.data.map(packet => ({
           ...packet,
           timeStamp: new Date().toISOString().replace("T", " ").substring(0, 23),
         }));
-  
+
         setPacketCaptureData((preview) => {
           const updatedPacketCapture = [...newPacketCapture, ...preview].slice(0, 100);
           setFilteredPacketCapture(filterPacket(updatedPacketCapture, searchTerm));
-  
+
           return updatedPacketCapture;
         });
       }
     }, 999);
-  
+
     return () => clearInterval(interval);
   }, [isLivePacket, token, searchTerm]);
-  
 
   const filterPacket = (data: PacketCaptureModel[], term: string) => {
     if (!term) return data;

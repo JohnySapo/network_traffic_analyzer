@@ -27,6 +27,7 @@ export default defineConfig({
     },
     proxy: {
       "/network" :{
+        // target: "http://localhost:8081",
         target: "http://network-traffic-backend:8080/",
         changeOrigin: true,
         secure: false,

@@ -85,7 +85,7 @@ public class PacketCaptureService {
                     packetLoggers.add(logger);
                 };
 
-                handler.loop(20, packetListener);
+                handler.loop(-1, packetListener);
                 handler.close();
 
             } catch (PcapNativeException | InterruptedException |NotOpenException nativeException) {

@@ -6,11 +6,12 @@ This Network Traffic Analyzer Application was developed as part of the TU765 Cyb
 
 | Frontend | Backend |
 |---|---|
-| Shadcn UI | Java/JDK v21 |
-| Node JS v20 | Maven v3.9 |
-| Vite JS v6.2 | PostgreSQL v17 |
-| JWT Decode v4.0 | JWT O.Auth0 |
-| Tailwindcss v4.0.11 | Spring Boot & Security |
+| Shadcn UI v4.1.3 | Java/JDK v21 |
+| Radix UI v4.1.3 | Maven v3.9 |
+| Node JS v20 | PostgreSQL v17 |
+| Vite JS v6.2 | JWT O.Auth0 |
+| JWT Decode v4.0 | Spring Boot & Security |
+| Tailwindcss v4.0.11 |Pcap4J & Npcap|
 | Docker & Docker Compose | Docker & Docker Compose |
 ||
 
@@ -27,10 +28,11 @@ This Network Traffic Analyzer Application was developed as part of the TU765 Cyb
 - Maven [ [v3.9.9](https://maven.apache.org/download.cgi)]
 - Node JS [ [v20.19.0](https://nodejs.org/en/download) ]
 - PostgreSQL [ [Version 17](https://www.postgresql.org/download/) ]
-- An IDEA of Preference [ **Recommended**: [Vscode](https://code.visualstudio.com/download) ( **Frontend** ), [Intellij Community](https://www.jetbrains.com/idea/download/?section=windows) ( **Backend** ) ]
+- An IDEA of Preference [ **Recommended**: [Vscode](https://code.visualstudio.com/download) ( **Frontend** ), [IntelliJ Community](https://www.jetbrains.com/idea/download/?section=windows) ( **Backend** ) ]
 
-# Getting Started with the Application via Docker
-### Follow the instruction below to initiate the application via docker container.
+# Getting Started with the Application
+
+## Follow the instruction below to initiate the application via docker container without live network packet capture.
 
 Open Git Bash & Clone the Repository to your local machine
 
@@ -68,6 +70,84 @@ http://localhost:5123
 ````
 ![app-main-page](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/app-main-page.jpg?raw=true)
 
+## Follow the instruction below to initiate the application manually with live network packet capture.
+
+`WARNING`: This method required the `docker compose up` command installed and the Postgres container must be running ONLY.
+
+The application with live network traffic needs at least two IDEs and Npcap installed and defined in the local machine's environment to start capturing all the network data and
+
+- **IDEs Recommended**: [Vscode](https://code.visualstudio.com/download) ( **Frontend** ), [Intellij Community](https://www.jetbrains.com/idea/download/?section=windows) ( **Backend** )
+- **Npcap**: [Download](https://npcap.com/#download)
+
+**Installing and Defining Npcap to Windows environment**
+
+After Npcap downloaded, go to windows system environment
+
+```bash
+Windows Key + Search `Edit environment variables for your account`
+```
+
+In "User variables for #your pc username" click on **NEW** button and add the values defined in the boxes one at the time below and save.
+
+First value
+```bash
+Variable name: jna.library.path
+Variable value: C:\Windows\System32\Npcap
+```
+
+Second value
+```bash
+Variable name: org.pcap4j.core.packetLibName
+Variable value: C:\Windows\System32\Npcap\Packet.dll
+```
+
+Third value
+```bash
+Variable name: org.pcap4j.core.pcapLibName
+Variable value: C:\Windows\System32\Npcap\wpcap.dll:
+```
+After the new variables are setup, proceed to the IDEs and open the following folders to run each application (Backend & Frontend)
+
+### IntelliJ IDE 
+
+**Step #1**  
+
+Open Directory : your-pc-path/network_traffic_analyzer > network_traffic_backend  
+
+**Step #2**  
+
+Navigate to packages and select the App class: src > main > java > com.Backend > Service > `PacketCaptureService.java` and past your machine's local IP address.  
+
+![packet-service-class](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/packet-service-class.jpg?raw=true)
+
+**Step #3** 
+
+Navigate to packages and select the App class: src > main > java > com.Backend > `NetworkTrafficAnalyzerBackendApplication.java`  
+
+Once selected press : `Left Shift + F9` to run the application.
+
+### Vscode IDE
+
+**Step #1**  
+
+Open Directory : your-pc-path/network_traffic_analyzer > network_traffic_frontend  
+
+**Step #2**  
+
+Navigate to package and select **vite.config.ts** file : network_traffic_frontend > `vite.config.ts` 
+
+Now uncomment the `localhost:8081` and comment the `network-traffic-backend:8080`.
+
+![vite-proxy-ports](https://github.com/JohnySapo/network_traffic_analyzer/blob/main/documents/screenshots/packet-service-class.jpg?raw=true)
+
+In your VSCode open the terminal and run the command `npm run dev`
+
+#### Now just open the in a browser the localhost to access the application
+
+````bash
+http://localhost:5123
+````
+
 # Backend - API Design
 
 ### Authentication API Endpoints
@@ -87,6 +167,14 @@ http://localhost:5123
 | Account Info | http://network-traffic-backend:8080/user/account/ | Role USER | GET |
 | Update Account | http://network-traffic-backend:8080/user/update-account/ | Role USER | PUT |
 | Reset Password | http://network-traffic-backend:8080/user/update-password/ | Role USER | PUT |
+| |
+
+### Network Packet Capture API Endpoints
+
+| Name | URL | Permission | HTTP Method |
+|---|---|---|---|
+| Start Packet Capture | http://network-traffic-backend:8080/network-packet/start-packet/ | Role ADMIN & USER | GET |
+| Report Packet Logs | http://network-traffic-backend:8080/network-packet/packet-report/ | Role ADMIN & USER | GET |
 | |
 
 ### Abuse IP Database API Endpoints
